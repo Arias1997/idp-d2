@@ -1,0 +1,21 @@
+Imágenes del sitio (sube con estos nombres exactos):
+
+  logo-idp.png            Logo (header, hero, mensaje y favicon)
+  hero-inicio.png         Fondo parallax del hero de inicio
+  Marcha-evamgelica.jpeg  Fondo parallax de la sección "Un lugar para ti"
+
+  valores/oracion.png       (opcional) reemplaza el icono de Oración
+  valores/cosecha.png       (opcional) reemplaza el icono de Cosecha
+  valores/liderazgo.png     (opcional) reemplaza el icono de Liderazgo
+  valores/mision-social.png (opcional) reemplaza el icono de Misión social
+  valores/mayordomia.png    (opcional) reemplaza el icono de Mayordomía
+
+Si una imagen no existe, el sitio muestra un fondo o icono de respaldo.
+
+  encuentranos/*.jpg|png|webp  Fotos del carrusel del hero de Encuéntranos
+                               (cualquier nombre; se muestran en orden alfabético)
+
+  iglesias/generica.jpg        Foto genérica para las tarjetas de iglesias
+  iglesias/<nombre>.jpg        Foto propia de una iglesia: su nombre en minúsculas,
+                               sin tildes y con guiones. Ej.: "Iglesia Central Sacaba"
+                               → iglesias/iglesia-central-sacaba.jpg

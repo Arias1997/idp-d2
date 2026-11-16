@@ -1,0 +1,4346 @@
+/* ==========================================================
+   IDP D-2 · Estilos del sitio
+   1. Variables          6. Encuéntranos y Sala LIVE
+   2. Base               7. Footer
+   3. Header             8. Panel admin y formularios
+   4. Botones            9. Accesibilidad
+   5. Inicio             10. Responsive
+   (8B: panel oscuro/claro · 8C: Bootstrap dentro del panel · 8D: fondo con imagen)
+   Imágenes de fondo: public/assets/img/
+   ========================================================== */
+
+
+/* ==========================================================
+   1. VARIABLES
+   Cambia aquí los colores y medidas de todo el sitio.
+   ========================================================== */
+:root {
+    /* Fondos y textos */
+    --fondo: #f2f5f9;
+    --fondo-alt: #ffffff;
+    --tarjeta: #ffffff;
+    --texto: #14263c;
+    --texto-suave: #5d6b7c;
+    --titulo: #0b1a2e;
+    --borde: #e2e9f1;
+
+    /* Colores de marca */
+    --marino: #0b1626;
+    --marino-2: #14243a;
+    --oro: #d4a52a;
+    --oro-oscuro: #a87c10;
+    --primario: #0c83c6;
+    --peligro: #b93d51;
+    --vivo: #e23b4a;
+
+    /* Header (rgba = color con transparencia; el último número es la opacidad) */
+    --nav-fondo: rgba(18, 26, 40, .72);
+    --nav-solida: rgba(10, 17, 29, .94);
+    --capsula-borde: rgba(255, 255, 255, .22);
+    --capsula-fondo: rgba(255, 255, 255, .06);
+
+    --sombra: 0 12px 36px rgba(16, 45, 74, .07);
+
+    /* Tipografías (cargadas desde Google Fonts en header.php) */
+    --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --sans: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* Medidas */
+    --nav-alto: 4.5rem;
+    --radio: 1.1rem;
+    --ancho: 1200px;
+    /* Margen lateral: mínimo 1.25rem; en pantallas grandes centra el contenido en 1200px */
+    --lado: max(1.25rem, calc((100% - var(--ancho)) / 2));
+}
+
+
+/* ==========================================================
+   2. BASE
+   ========================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* El padding y el borde se incluyen en el ancho */
+}
+
+html {
+    scroll-behavior: smooth;              /* Desplazamiento suave al hacer clic en #enlaces */
+    scroll-padding-top: var(--nav-alto);  /* Evita que el header fijo tape el título de la sección */
+}
+
+body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font: 1rem/1.6 var(--sans);           /* tamaño/altura de línea y familia */
+    -webkit-font-smoothing: antialiased;  /* Letras más finas en Chrome/Safari de Mac */
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.15;
+}
+
+/* Contorno visible solo al navegar con teclado (Tab) */
+:focus-visible {
+    outline: 3px solid var(--oro);
+    outline-offset: 2px;
+}
+
+/* Enlace "Saltar al contenido": oculto arriba, aparece al pulsar Tab */
+.saltar {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    background: var(--oro);
+    color: #111;
+    padding: .6rem 1rem;
+    border-radius: .4rem;
+    font-weight: 700;
+}
+
+.saltar:focus {
+    top: 1rem;
+}
+
+/* Texto pequeño en mayúsculas sobre los títulos */
+.eyebrow {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--primario);
+}
+
+
+/* ==========================================================
+   3. HEADER
+   ========================================================== */
+.nav {
+    position: sticky;  /* Se queda pegado arriba al bajar */
+    top: 0;
+    z-index: 50;       /* Queda por encima del resto del contenido */
+    height: var(--nav-alto);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 var(--lado);
+    background: var(--nav-fondo);
+    -webkit-backdrop-filter: blur(12px); /* Desenfoca lo que está detrás (Safari) */
+    backdrop-filter: blur(12px);         /* Efecto vidrio esmerilado (resto de navegadores) */
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    color: #fff;
+    transition: background .3s;
+}
+
+/* Al bajar (clase añadida por sitio.js) y en páginas internas sin hero, fondo casi opaco */
+.nav.nav-solida,
+.pagina-interna:not(.con-hero) .nav {
+    background: var(--nav-solida);
+}
+
+/* Logo + nombre */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-width: 0; /* Permite que el texto se encoja en pantallas pequeñas */
+}
+
+.brand-logo {
+    width: 2.4rem;
+    height: 2.4rem;
+    /* border: 2px solid var(--oro-oscuro); */
+    border-radius: 50%;
+    object-fit: cover; /* Recorta la imagen sin deformarla */
+    flex: none;        /* No se encoge */
+}
+
+/* Círculo de respaldo cuando aún no existe logo-idp.png */
+.brand-emblema {
+    display: grid;
+    place-items: center; /* Centra el contenido horizontal y verticalmente */
+    color: var(--oro);
+    background: radial-gradient(circle, #2b3a52, #121c2c);
+    border: 1px solid rgba(255, 255, 255, .2);
+}
+
+.brand strong {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    white-space: nowrap; /* Evita que el nombre se parta en dos líneas */
+}
+
+.brand-sub {
+    font-size: .72rem;
+    line-height: 1.25;
+    color: #c5cfdb;
+    padding-left: .8rem;
+    border-left: 1px solid rgba(255, 255, 255, .25); /* Línea divisoria vertical */
+}
+
+/* Menú de cápsulas */
+.menu {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.capsula {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--capsula-borde);
+    background: var(--capsula-fondo);
+    color: #fff;
+    border-radius: 999px; /* Bordes totalmente redondos (forma de cápsula) */
+    font: 600 .85rem/1 var(--sans);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s;
+}
+
+.capsula:hover {
+    background: rgba(255, 255, 255, .14);
+    border-color: rgba(255, 255, 255, .45);
+}
+
+/* Cápsula de la sección actual */
+.capsula.activa {
+    border-color: var(--oro);
+    color: #f3d98a;
+    background: rgba(212, 165, 42, .16);
+}
+
+.capsula svg {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+}
+
+/* Flechita ▾ de los desplegables */
+.capsula .flecha {
+    width: .9rem;
+    transition: transform .2s;
+}
+
+/* Gira la flechita cuando el desplegable está abierto */
+.capsula[aria-expanded="true"] .flecha {
+    transform: rotate(180deg);
+}
+
+/* Punto rojo que late (Live) */
+.punto-vivo {
+    display: inline-block;
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background: var(--vivo);
+    animation: latido 1.8s infinite; /* Repite la animación "latido" sin parar */
+}
+
+/* Anillo rojo que crece y se desvanece */
+@keyframes latido {
+    0% {
+        box-shadow: 0 0 0 0 rgba(226, 59, 74, .6);
+    }
+    70% {
+        box-shadow: 0 0 0 .45rem rgba(226, 59, 74, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(226, 59, 74, 0);
+    }
+}
+
+/* Desplegables (Accesibilidad y Panel) */
+.desplegable {
+    position: relative; /* El menú se posiciona respecto a este contenedor */
+}
+
+.desplegable-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + .5rem); /* Justo debajo del botón, con un pequeño espacio */
+    z-index: 60;
+    min-width: 11.5rem;
+    padding: .4rem;
+    background: #1b2535;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: .6rem;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .35);
+}
+
+/* El atributo hidden lo pone/quita sitio.js */
+.desplegable-menu[hidden] {
+    display: none;
+}
+
+.desplegable-menu form {
+    margin: 0;
+}
+
+.desplegable-menu a,
+.desplegable-menu button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: .55rem .75rem;
+    border: 0;
+    border-radius: .4rem;
+    background: none;
+    color: #fff;
+    font: 500 .9rem var(--sans);
+    text-align: left;
+    cursor: pointer;
+}
+
+.desplegable-menu a:hover,
+.desplegable-menu button:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+/* Muestra ✓ en la opción de accesibilidad activada */
+.desplegable-menu [aria-pressed="true"]::after {
+    content: "✓";
+    color: var(--oro);
+    font-weight: 700;
+}
+
+/* Botón hamburguesa ☰ (solo visible en pantallas pequeñas, ver sección 10) */
+.nav-toggle {
+    display: none;
+    width: 2.6rem;
+    height: 2.6rem;
+    padding: .65rem .55rem;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--capsula-borde);
+    border-radius: .6rem;
+    background: var(--capsula-fondo);
+    cursor: pointer;
+}
+
+.nav-toggle span {
+    display: block;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: .25s;
+}
+
+/* Convierte las 3 rayas en una X cuando el menú está abierto */
+.menu-abierto .nav-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menu-abierto .nav-toggle span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-abierto .nav-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ==========================================================
+   4. BOTONES
+   ========================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    background: var(--primario);
+    color: #fff;
+    border: 1px solid var(--primario);
+    padding: .75rem 1.4rem;
+    border-radius: .6rem;
+    font: 700 1rem/1.2 var(--sans); /* peso tamaño/altura-de-línea familia */
+    cursor: pointer;
+    transition: filter .2s, background .2s, color .2s, border-color .2s, transform .2s;
+}
+
+.btn:hover {
+    filter: brightness(.93); /* Oscurece un poco el botón */
+}
+
+.btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.btn svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: none;
+}
+
+.btn.small {
+    padding: .45rem .8rem;
+    font-size: .875rem;
+}
+
+.btn.outline {
+    background: transparent;
+    color: #136998;
+    border-color: #bdd7e9;
+}
+
+.btn.danger {
+    background: var(--peligro);
+    border-color: var(--peligro);
+}
+
+/* Botón dorado del hero */
+.btn-oro {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #1d1606;
+    border-radius: .3rem;
+    padding: .95rem 1.5rem;
+}
+
+.btn-oro:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px); /* Sube 1px al pasar el mouse */
+}
+
+/* Botón con borde blanco (Ver en vivo) */
+.btn-claro {
+    background: transparent;
+    border-color: rgba(255, 255, 255, .8);
+    color: #fff;
+    border-radius: .3rem;
+    padding: .95rem 1.5rem;
+}
+
+.btn-claro:hover {
+    background: rgba(255, 255, 255, .1);
+    filter: none;
+}
+
+/* Botón cápsula del parallax de la marcha */
+.btn-capsula-clara {
+    background: transparent;
+    border-color: rgba(255, 255, 255, .85);
+    color: #fff;
+    border-radius: 999px;
+    padding: .7rem 1.4rem;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.btn-capsula-clara:hover {
+    background: #fff;
+    color: var(--marino);
+    filter: none;
+}
+
+/* Botón con borde dorado del footer */
+.btn-borde-oro {
+    background: transparent;
+    border-color: var(--oro);
+    color: #fff;
+    border-radius: .3rem;
+    font-size: .9rem;
+    padding: .8rem 1.2rem;
+}
+
+.btn-borde-oro:hover {
+    background: var(--oro);
+    color: #1d1606;
+    filter: none;
+}
+
+
+/* ==========================================================
+   5. INICIO
+   ========================================================== */
+
+/* ---------- Hero con parallax (public/assets/img/hero-inicio.png) ---------- */
+.hero-inicio {
+    position: relative;
+    margin-top: calc(-1 * var(--nav-alto)); /* Sube el hero detrás del header transparente */
+    min-height: max(36rem, 100svh);          /* Alto de pantalla completa (mínimo 36rem) */
+    display: flex;
+    align-items: center;
+    padding: calc(var(--nav-alto) + 3rem) var(--lado) 4rem;
+    color: #fff;
+    /* Varias capas: la primera queda encima.
+       1) Degradado oscuro de izquierda a derecha para que se lea el texto
+       2) Foto con "fixed" = efecto parallax (la foto queda quieta al hacer scroll)
+       3) Fondo de respaldo si la foto aún no existe */
+    background:
+        linear-gradient(90deg, rgba(3, 8, 17, .95) 0%, rgba(3, 8, 17, .84) 38%, rgba(3, 8, 17, .45) 72%, rgba(3, 8, 17, .3) 100%),
+        url('../img/hero-inicio.png') center / cover no-repeat fixed,
+        radial-gradient(circle at 75% 42%, #e9a93b 0, #8a4a1c 20%, #2a2032 46%, #0b1424 75%);
+}
+
+.hero-contenido {
+    max-width: 36rem;
+    position: relative;
+}
+
+/* Etiqueta redonda con el logo pequeño */
+.insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .35rem .95rem .35rem .4rem;
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .05);
+    font: 700 .68rem var(--sans);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--oro);
+}
+
+.insignia img,
+.insignia-punto {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.hero-inicio h1 {
+    font: 400 clamp(2.3rem, 4.6vw, 3.6rem)/1.1 var(--serif); /* clamp(mínimo, según ancho de pantalla, máximo) */
+    letter-spacing: -.01em;
+    margin: 1.4rem 0 1.2rem;
+}
+
+/* "crecer en fe" en dorado y cursiva */
+.hero-inicio h1 em {
+    color: var(--oro);
+    font-style: italic;
+}
+
+.hero-texto {
+    font-size: 1.05rem;
+    color: #dde4ec;
+    max-width: 32rem;
+    margin: 0 0 1rem;
+}
+
+.versiculo {
+    font: italic .95rem var(--serif);
+    margin: 0 0 2rem;
+}
+
+.versiculo q {
+    quotes: "«" "»"; /* Comillas españolas para la etiqueta <q> */
+}
+
+.versiculo cite {
+    font: normal 700 .66rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--oro);
+    margin-left: .4rem;
+}
+
+.hero-acciones {
+    display: flex;
+    flex-wrap: wrap; /* Los botones bajan a otra línea si no caben */
+    gap: .9rem;
+}
+
+/* ---------- En vivo ahora (debajo del hero, solo si hay transmisión en_vivo) ---------- */
+.vivo-ahora {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr; /* Video más ancho que el texto */
+    gap: 2.5rem;
+    align-items: center;
+    padding: 3.5rem var(--lado);
+    background: linear-gradient(180deg, #050b16, #011736);
+    color: #fff;
+}
+
+.vivo-ahora-player {
+    border-radius: var(--radio);
+    overflow: hidden; /* Redondea las esquinas del video */
+    box-shadow: 0 0 0 2px rgba(226, 59, 74, .45), 0 20px 50px rgba(0, 0, 0, .45); /* Borde rojo + sombra */
+}
+
+/* Etiqueta roja "EN VIVO AHORA" */
+.etiqueta-vivo {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    background: rgba(226, 59, 74, .15);
+    border: 1px solid rgba(226, 59, 74, .5);
+    color: #ff8a95;
+    font: 700 .7rem var(--sans);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.vivo-ahora-info h2 {
+    font: 400 clamp(1.6rem, 2.8vw, 2.2rem)/1.15 var(--serif);
+    margin: 1rem 0 .5rem;
+}
+
+.vivo-ahora-info p {
+    color: #c3cdd9;
+    margin: 0 0 1.4rem;
+}
+
+/* ---------- Próximas transmisiones (programadas) ---------- */
+/* Fondo oscuro con dos "luces" difusas (dorada y azul) para que resalte */
+.proximas {
+    position: relative;
+    overflow: hidden;
+    padding: 3.5rem var(--lado);
+    background:
+        radial-gradient(40rem 20rem at 85% 0%, rgba(202, 151, 22, 0.16), transparent 70%),
+        radial-gradient(35rem 22rem at 0% 100%, rgba(8, 122, 189, 0.18), transparent 70%),
+        linear-gradient(180deg, #081220, #040c1b);
+    color: #fff;
+}
+
+.proximas-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.8rem;
+}
+
+.proximas .eyebrow {
+    color: var(--oro); /* Dorado sobre el fondo oscuro */
+}
+
+.proximas-cabecera h2 {
+    font: 400 clamp(1.7rem, 3vw, 2.3rem)/1.15 var(--serif);
+    color: #fff;
+    margin: .4rem 0 0;
+}
+
+/* Enlace "Ir a la sala" con forma de cápsula */
+.proximas-cabecera .enlace-ruta {
+    margin: 0;
+    padding: .55rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 999px;
+    color: #fff;
+    transition: background .2s, border-color .2s;
+}
+
+.proximas-cabecera .enlace-ruta:hover {
+    background: rgba(255, 255, 255, .08);
+    border-color: var(--oro);
+}
+
+.proximas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); /* Hasta 3 por fila */
+    gap: 1.2rem;
+}
+
+/* Tarjeta tipo vidrio con línea dorada arriba */
+.proxima {
+    position: relative;
+    display: flex;
+    gap: 1.1rem;
+    padding: 1.3rem;
+    border-radius: var(--radio);
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: linear-gradient(160deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .03));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+
+.proxima::before {
+    content: "";
+    position: absolute;
+    inset: 0 1.3rem auto; /* Solo una línea en el borde superior */
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--oro), transparent);
+}
+
+.proxima:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 165, 42, .5);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, .45);
+}
+
+/* Calendario: día grande y mes (dorado) */
+.proxima-fecha {
+    width: 4.4rem;
+    flex: none;
+    align-self: flex-start;
+    padding: .65rem 0;
+    border-radius: .8rem;
+    background: linear-gradient(160deg, #f0c75a, var(--oro));
+    color: #0b1626;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(212, 165, 42, .3);
+}
+
+.proxima-fecha strong {
+    display: block;
+    font: 600 1.9rem/1 var(--serif);
+}
+
+.proxima-fecha span {
+    display: block;
+    margin-top: .2rem;
+    font: 700 .68rem var(--sans);
+    letter-spacing: .12em;
+}
+
+.proxima-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    background: rgba(212, 165, 42, .16);
+    color: #f0c75a;
+    font: 700 .65rem var(--sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Programada cuya hora ya pasó pero aún no se marcó en vivo: punto rojo que late */
+.proxima-estado.por-comenzar {
+    background: rgba(226, 59, 74, .18);
+    color: #ff8a95;
+}
+
+.proxima-estado.por-comenzar::before {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: var(--vivo);
+    animation: latido 1.8s infinite; /* Reutiliza la animación del indicador "En vivo" */
+}
+
+.proxima-info h3 {
+    font: 600 1.15rem/1.25 var(--sans);
+    color: #fff;
+    margin: .5rem 0 .3rem;
+}
+
+.proxima-info p {
+    margin: 0;
+    font-size: .86rem;
+    color: #b6c2d1;
+}
+
+.proxima-info .enlace-ruta {
+    margin-top: .7rem;
+    color: #5cc0f5; /* Azul más claro para leerse sobre fondo oscuro */
+}
+
+.proxima-info .enlace-ruta:hover {
+    color: var(--oro);
+}
+
+/* ---------- Secciones generales ---------- */
+.seccion {
+    padding: 5.5rem var(--lado);
+}
+
+.titulo-seccion {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.titulo-seccion .eyebrow {
+    color: var(--marino-2);
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.titulo-seccion h2 {
+    font: 400 clamp(2rem, 3.6vw, 2.6rem)/1.15 var(--serif);
+    margin: .6rem 0 0;
+    color: var(--titulo);
+}
+
+.titulo-seccion p {
+    color: var(--texto-suave);
+    max-width: 38rem;
+    margin: .8rem auto 0;
+}
+
+/* ---------- Valores ---------- */
+.valores-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra la segunda fila (2 valores) como en el diseño */
+    gap: 3rem 2.5rem;        /* espacio vertical / horizontal */
+}
+
+.valor {
+    flex: 0 1 19rem; /* No crece, puede encogerse, ancho base 19rem */
+    text-align: center;
+}
+
+/* Círculo con borde de color; --color viene del style="" de cada valor en inicio.php */
+.valor-icono {
+    width: 5.25rem;
+    height: 5.25rem;
+    margin: 0 auto 1rem;
+    display: grid;
+    place-items: center;
+    border: .3rem solid var(--color);
+    border-radius: 50%;
+    color: var(--color);
+    transition: transform .3s;
+}
+
+/* Sube un poco el icono al pasar el mouse */
+.valor:hover .valor-icono,
+.valor:hover .valor-img {
+    transform: translateY(-4px);
+}
+
+.valor-icono svg {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
+/* Imagen propia del valor (sin borde) */
+.valor-img {
+    width: 5.25rem;
+    height: 5.25rem;
+    margin: 0 auto 1rem;
+    object-fit: contain; /* Muestra la imagen completa sin recortarla */
+    transition: transform .3s;
+}
+
+.valor h3 {
+    font: 400 1.6rem var(--serif);
+    margin: 0 0 .6rem;
+    color: var(--titulo);
+}
+
+.valor p {
+    font-size: .86rem;
+    line-height: 1.65;
+    color: var(--texto-suave);
+    margin: 0;
+}
+
+/* ---------- Parallax de la marcha (public/assets/img/Marcha-evamgelica.jpeg) ---------- */
+.parallax-marcha {
+    position: relative;
+    min-height: 34rem;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 7rem 1.25rem 6rem;
+    color: #fff;
+    /* 1) Capa oscura  2) Foto fija (parallax)  3) Respaldo azul si falta la foto */
+    background:
+        linear-gradient(rgba(6, 16, 32, .55), rgba(6, 16, 32, .68)),
+        url('../img/Marcha-evamgelica.jpeg') center / cover no-repeat fixed,
+        linear-gradient(135deg, #1d4f8f, #0b1626);
+}
+
+/* Ola superior: SVG del mismo color que el fondo de la sección anterior */
+.ola {
+    position: absolute;
+    top: -1px; /* -1px evita una línea fina entre secciones */
+    left: 0;
+    width: 100%;
+    height: 3.5rem;
+    fill: var(--fondo);
+}
+
+.parallax-contenido {
+    max-width: 36rem;
+}
+
+.parallax-marcha .acento {
+    font: italic .95rem var(--serif);
+    color: var(--oro);
+    margin: 0;
+}
+
+.parallax-marcha h2 {
+    font: 700 clamp(1.8rem, 3.4vw, 2.5rem)/1.2 var(--sans);
+    margin: .6rem 0 .8rem;
+}
+
+.parallax-marcha p {
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 1.8rem;
+}
+
+/* ---------- Mensaje ---------- */
+.mensaje {
+    background: var(--fondo-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+/* Logo dentro de un círculo con borde dorado */
+.mensaje-logo {
+    flex: none;
+    width: 9.5rem;
+    height: 9.5rem;
+    border-radius: 50%;
+    /* Sin borde ni padding: la imagen del logo ya trae su propio borde dorado */
+    background: #fff;
+    box-shadow: 0 14px 30px rgba(11, 26, 46, .14);
+    display: grid;
+    place-items: center;
+    overflow: hidden; /* Recorta lo que salga del círculo */
+}
+
+.mensaje-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.mensaje-logo span {
+    font: 700 1.4rem var(--sans);
+    color: var(--marino-2);
+}
+
+.mensaje-texto {
+    max-width: 31rem;
+}
+
+.mensaje-texto h2 {
+    font: 700 clamp(1.4rem, 2.4vw, 1.75rem)/1.2 var(--sans);
+    color: var(--titulo);
+    margin: 0 0 .9rem;
+}
+
+.mensaje-autor {
+    font: 700 .72rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--marino-2);
+    padding-bottom: .55rem;
+    margin-bottom: .8rem;
+    position: relative;
+}
+
+/* Rayita dorada debajo de "Supervisor IDP · D2" */
+.mensaje-autor::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.6rem;
+    height: 3px;
+    background: var(--oro);
+}
+
+.mensaje blockquote {
+    margin: 0;
+    font-size: .92rem;
+    line-height: 1.7;
+    color: var(--texto-suave);
+}
+
+
+/* ==========================================================
+   6. ENCUÉNTRANOS Y SALA LIVE
+   ========================================================== */
+/* ---------- Encuéntranos: hero con carrusel ---------- */
+.enc-hero {
+    position: relative;
+    margin-top: calc(-1 * var(--nav-alto)); /* Sube el hero detrás del header transparente */
+    padding: calc(var(--nav-alto) + 3.5rem) var(--lado) 4rem;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;   /* Las fotos del carrusel no se salen del hero */
+    isolation: isolate; /* Crea una capa propia para que el z-index:-1 del carrusel quede dentro del hero */
+    background: radial-gradient(circle at 50% 30%, #23406b, #0b1626 70%); /* Respaldo si no hay fotos */
+}
+
+/* Contenedor de las fotos, detrás del contenido */
+.enc-carrusel {
+    position: absolute;
+    inset: 0; /* top, right, bottom y left en 0: ocupa todo el hero */
+    z-index: -1;
+}
+
+/* Cada foto: todas encimadas, solo la .activa es visible (fundido) */
+.enc-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.4s ease, transform 7s ease; /* Fundido + acercamiento lento */
+}
+
+.enc-slide.activa {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Capa oscura encima de las fotos para que se lea el texto */
+.enc-carrusel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4, 10, 20, .78) 0%, rgba(4, 10, 20, .7) 45%, rgba(4, 10, 20, .92) 100%);
+}
+
+.enc-hero-contenido {
+    max-width: 46rem;
+    margin: 0 auto;
+}
+
+/* Logo redondo centrado */
+.enc-logo {
+    width: 5.5rem;
+    height: 5.5rem;
+    margin: 0 auto 1.4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+}
+
+.enc-hero h1 {
+    font: 600 clamp(2.2rem, 4.8vw, 3.6rem)/1.08 var(--serif);
+    font-variant: small-caps; /* Versalitas, como en el diseño */
+    letter-spacing: .01em;
+    margin: 1.2rem 0 1rem;
+}
+
+.enc-hero h1 em {
+    display: block; /* "Brazos abiertos" en una segunda línea */
+    color: var(--oro);
+    font-style: normal;
+}
+
+.enc-hero .versiculo {
+    margin-bottom: .6rem;
+}
+
+.enc-hero-texto {
+    color: #d3dbe5;
+    max-width: 38rem;
+    margin: 0 auto 1.8rem;
+}
+
+.enc-hero .hero-acciones {
+    justify-content: center;
+}
+
+/* Las 3 tarjetas semitransparentes dentro del hero */
+.enc-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    max-width: var(--ancho);
+    margin: 3.5rem auto 0;
+    text-align: left;
+}
+
+.vidrio {
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem;
+    border-radius: var(--radio);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .16);
+    -webkit-backdrop-filter: blur(14px); /* Efecto vidrio (Safari) */
+    backdrop-filter: blur(14px);         /* Efecto vidrio: desenfoca la foto de atrás */
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+}
+
+.vidrio-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .8rem;
+    margin-bottom: 1rem;
+}
+
+/* Icono dentro de un cuadrito redondeado */
+.vidrio-icono {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: .7rem;
+    display: grid;
+    place-items: center;
+    background: rgba(212, 165, 42, .16);
+    color: var(--oro);
+}
+
+.vidrio-icono svg {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+/* Etiqueta pequeña de la esquina (DISTRITO 2, CULTOS ACTIVOS...) */
+.vidrio-etiqueta {
+    font: 700 .62rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .3rem .6rem;
+    border-radius: .35rem;
+    border: 1px solid rgba(255, 255, 255, .22);
+    color: #e6ecf3;
+    white-space: nowrap;
+}
+
+.vidrio-etiqueta.verde {
+    border-color: rgba(76, 201, 125, .5);
+    color: #7fe0a6;
+}
+
+.vidrio h2 {
+    font: 700 1.1rem var(--sans);
+    margin: 0 0 .5rem;
+}
+
+.vidrio p {
+    font-size: .88rem;
+    color: #cdd6e1;
+    margin: 0 0 .9rem;
+}
+
+/* Recuadro dorado con la referencia para llegar */
+.vidrio-nota {
+    display: flex;
+    gap: .55rem;
+    padding: .75rem .85rem;
+    border-radius: .6rem;
+    background: rgba(212, 165, 42, .12);
+    border: 1px solid rgba(212, 165, 42, .35);
+    font-size: .8rem;
+    color: #f1e3b8;
+}
+
+.vidrio-nota svg {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    margin-top: .15rem;
+    color: var(--oro);
+}
+
+/* Tabla de horarios dentro de la tarjeta de vidrio */
+.vidrio-horarios {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Filas compactas para que la tarjeta no sea tan alta */
+.vidrio-horarios li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .38rem 0;   /* Antes .55rem */
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    font-size: .78rem;   /* Antes .86rem */
+    line-height: 1.35;
+}
+
+.vidrio-horarios strong {
+    color: var(--oro);
+    white-space: nowrap;
+}
+
+.vidrio-contacto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    padding: .7rem .85rem;
+    border-radius: .6rem;
+    background: rgba(37, 211, 102, .1);
+    border: 1px solid rgba(37, 211, 102, .35);
+    font-size: .85rem;
+    font-weight: 600;
+    margin-bottom: .6rem;
+}
+
+/* Enlace al pie de cada tarjeta, empujado hacia abajo */
+.vidrio-pie {
+    margin-top: auto; /* Empuja el enlace al fondo para que las 3 tarjetas queden parejas */
+    padding-top: 1rem;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--oro);
+}
+
+.vidrio-pie:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Encuéntranos: filtros y tarjetas de iglesias ---------- */
+.enc-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .5rem;
+    margin: -1.5rem 0 2.5rem;
+}
+
+.enc-filtro {
+    padding: .5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    background: var(--tarjeta);
+    color: var(--texto);
+    font: 600 .82rem var(--sans);
+    cursor: pointer;
+}
+
+.enc-filtro:hover {
+    border-color: var(--titulo);
+}
+
+/* Filtro seleccionado (aria-pressed lo cambia encuentranos.js) */
+.enc-filtro[aria-pressed="true"] {
+    background: var(--titulo);
+    border-color: var(--titulo);
+    color: #fff;
+}
+
+.enc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1.5rem;
+}
+
+.enc-iglesia {
+    display: flex;
+    flex-direction: column;
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+    transition: transform .25s, box-shadow .25s;
+}
+
+.enc-iglesia:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(16, 45, 74, .12);
+}
+
+/* Necesario porque display:flex anula el atributo hidden del filtro */
+.enc-iglesia[hidden] {
+    display: none;
+}
+
+/* Foto superior con el nombre encima */
+.enc-foto {
+    position: relative;
+    height: 11rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem 1.2rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1d3a63, #0b1626) center / cover; /* Respaldo sin foto */
+}
+
+/* Degradado para que el nombre se lea sobre la foto */
+.enc-foto::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .05) 30%, rgba(4, 10, 20, .85) 100%);
+}
+
+.enc-foto > * {
+    position: relative; /* Texto por encima del degradado */
+}
+
+.enc-zona {
+    position: absolute !important; /* Arriba a la izquierda, fuera del flujo */
+    top: .9rem;
+    left: 1rem;
+    padding: .25rem .6rem;
+    border-radius: .35rem;
+    background: var(--oro);
+    color: #1d1606;
+    font: 700 .62rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.enc-foto h3 {
+    font: 600 1.3rem/1.15 var(--serif);
+    font-variant: small-caps;
+    margin: 0;
+}
+
+.enc-foto p {
+    font-size: .8rem;
+    color: #d3dbe5;
+    margin: .2rem 0 0;
+}
+
+.enc-cuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    flex: 1; /* Ocupa el alto sobrante para alinear los botones de todas las tarjetas */
+}
+
+/* Fila del pastor con círculo de iniciales */
+.enc-pastor {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem;
+    border-radius: .7rem;
+    background: var(--fondo);
+}
+
+.enc-avatar {
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(212, 165, 42, .18);
+    color: var(--oro-oscuro);
+    font: 700 .85rem var(--sans);
+}
+
+.enc-pastor small,
+.enc-subtitulo {
+    display: block;
+    font: 700 .62rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+.enc-pastor strong {
+    display: block;
+    color: var(--titulo);
+    font-size: .92rem;
+}
+
+.enc-horarios {
+    list-style: none;
+    padding: 0;
+    margin: .4rem 0 0;
+}
+
+.enc-horarios li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .4rem 0;
+    border-bottom: 1px dashed var(--borde);
+    font-size: .86rem;
+    color: var(--texto-suave);
+}
+
+.enc-horarios strong {
+    color: var(--titulo);
+    white-space: nowrap;
+}
+
+.enc-direccion {
+    display: flex;
+    gap: .55rem;
+    padding: .7rem .8rem;
+    border-radius: .6rem;
+    background: rgba(212, 165, 42, .1);
+    border: 1px solid rgba(212, 165, 42, .3);
+    font-size: .82rem;
+    color: var(--texto);
+}
+
+.enc-direccion svg {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    margin-top: .15rem;
+    color: var(--oro-oscuro);
+}
+
+.enc-acciones {
+    display: flex;
+    gap: .6rem;
+    margin-top: auto; /* Botones siempre al fondo de la tarjeta */
+}
+
+.enc-acciones .btn {
+    flex: 1;
+    font-size: .82rem;
+    padding: .65rem .8rem;
+    border-radius: .5rem;
+}
+
+.btn-whatsapp {
+    background: transparent;
+    border-color: #25d366;
+    color: #128c4a;
+}
+
+.btn-whatsapp:hover {
+    background: #25d366;
+    color: #fff;
+    filter: none;
+}
+
+.btn-oscuro {
+    background: var(--marino);
+    border-color: var(--marino);
+}
+
+/* ---------- Encuéntranos: cómo llegar ---------- */
+.enc-llegar {
+    background: var(--fondo-alt);
+}
+
+.enc-llegar-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr; /* Mapa más ancho que la tarjeta de visita */
+    gap: 1.75rem;
+    align-items: stretch;
+}
+
+.enc-mapa-tarjeta {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+    background: var(--tarjeta);
+}
+
+.enc-mapa-barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: .8rem 1.1rem;
+    background: var(--marino);
+    color: #fff;
+    font-size: .82rem;
+}
+
+.enc-mapa {
+    flex: 1;
+    min-height: 26rem;
+    z-index: 0; /* Evita que el mapa (Leaflet) tape el header y los desplegables */
+    background: #e9eff5;
+}
+
+.enc-mapa-vacio {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+.enc-mapa-pie {
+    display: flex;
+    gap: .6rem;
+    padding: .9rem 1.1rem;
+    border-top: 1px solid var(--borde);
+}
+
+.enc-mapa-pie .btn {
+    font-size: .85rem;
+    padding: .65rem 1rem;
+}
+
+/* Tarjeta "¿Qué esperar en tu primera visita?" */
+.enc-visita {
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem;
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra);
+}
+
+.enc-visita h3 {
+    font: 600 1.5rem/1.15 var(--serif);
+    font-variant: small-caps;
+    color: var(--titulo);
+    margin: .4rem 0 .6rem;
+}
+
+.enc-visita > p {
+    font-size: .88rem;
+    color: var(--texto-suave);
+    margin: 0 0 1rem;
+}
+
+.enc-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.4rem;
+    display: grid;
+    gap: .9rem;
+}
+
+.enc-lista li {
+    display: flex;
+    gap: .7rem;
+    font-size: .84rem;
+    color: var(--texto-suave);
+}
+
+.enc-lista strong {
+    display: block;
+    color: var(--titulo);
+    font-size: .9rem;
+}
+
+/* Circulito verde con ✓ */
+.enc-check {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(41, 132, 92, .14);
+    color: #29845c;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+/* Recuadro verde final con botón */
+.enc-cta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: .8rem;
+    background: linear-gradient(135deg, #1f6f4a, #145236);
+    color: #fff;
+}
+
+.enc-cta p {
+    margin: 0;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.enc-cta .btn {
+    background: #fff;
+    border-color: #fff;
+    color: #145236;
+    font-size: .8rem;
+    padding: .55rem .9rem;
+    white-space: nowrap;
+}
+
+.enlace-ruta {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    margin-top: .7rem;
+    font-weight: 700;
+    font-size: .875rem;
+    color: var(--primario);
+}
+
+.enlace-ruta svg {
+    width: .9rem;
+    height: .9rem;
+}
+
+/* ---------- Sala de transmisiones ---------- */
+.sala {
+    margin-top: calc(-1 * var(--nav-alto)); /* Fondo oscuro detrás del header transparente */
+    padding: calc(var(--nav-alto) + 2.5rem) var(--lado) 4rem;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(60, 80, 160, .25), transparent 60%),
+        linear-gradient(180deg, #070d1a, #0b1424);
+    color: #fff;
+}
+
+.sala-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+/* Rayita dorada + texto pequeño antes del título */
+.sala-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font: 700 .68rem var(--sans);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--oro);
+}
+
+.sala-eyebrow::before {
+    content: "";
+    width: 1.6rem;
+    height: 2px;
+    background: var(--oro);
+}
+
+.sala-cabecera h1 {
+    font: 600 clamp(1.8rem, 3.6vw, 2.6rem)/1.15 var(--serif);
+    margin: .5rem 0 0;
+}
+
+.sala-estados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.sala-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: rgba(255, 255, 255, .05);
+    font: 600 .78rem var(--sans);
+    color: #d6dee8;
+}
+
+.sala-pill svg {
+    width: .95rem;
+    height: .95rem;
+}
+
+.sala-pill.en_vivo {
+    border-color: rgba(226, 59, 74, .55);
+    background: rgba(226, 59, 74, .14);
+    color: #ff8a95;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.sala-pill.programada {
+    border-color: rgba(212, 165, 42, .5);
+    color: #f3d98a;
+}
+
+/* Pantalla del reproductor */
+.sala-pantalla {
+    position: relative;
+    aspect-ratio: 16 / 9; /* Proporción de video panorámico */
+    border-radius: var(--radio);
+    overflow: hidden;
+    background: #060a14;
+    border: 1px solid rgba(255, 255, 255, .1);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, .5);
+}
+
+/* Borde rojo suave cuando está en vivo */
+.sala-pantalla.es-vivo {
+    box-shadow: 0 0 0 2px rgba(226, 59, 74, .45), 0 30px 70px rgba(0, 0, 0, .5);
+}
+
+.sala-pantalla iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Escenario con 3 reflectores (cuando no hay video) */
+.sala-escenario {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+    padding: 2rem;
+    text-align: center;
+    background:
+        radial-gradient(ellipse 16% 75% at 50% 0%, rgba(255, 236, 190, .22), transparent 70%), /* Luz central cálida */
+        radial-gradient(ellipse 13% 65% at 18% 0%, rgba(120, 130, 255, .2), transparent 70%),  /* Luz izquierda */
+        radial-gradient(ellipse 13% 65% at 82% 0%, rgba(120, 130, 255, .2), transparent 70%),  /* Luz derecha */
+        linear-gradient(180deg, #151b3d, #070b18);
+}
+
+.sala-escenario-titulo {
+    font: 400 clamp(1.4rem, 3.2vw, 2.4rem)/1.2 var(--serif);
+    margin: .4rem 0 0;
+}
+
+.sala-escenario-sub {
+    color: #b9c5d3;
+    font-size: .9rem;
+    margin: 0;
+}
+
+.sala-escenario-icono {
+    width: 3.6rem;
+    height: 3.6rem;
+    margin-top: .6rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--oro);
+    color: #1d1606;
+    box-shadow: 0 0 0 .5rem rgba(212, 165, 42, .18);
+}
+
+.sala-escenario-icono svg {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.sala-aviso {
+    margin: 1rem 0 0;
+    font-size: .88rem;
+    color: #b9c5d3;
+    text-align: center;
+}
+
+.sala-aviso strong {
+    color: #fff;
+}
+
+/* Barra inferior: plataformas y acciones */
+.sala-barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+    padding: .9rem 1.1rem;
+    border-radius: var(--radio);
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .1);
+}
+
+.sala-plataformas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    font-size: .8rem;
+    color: #9fadbd;
+}
+
+.plataforma {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .45rem .8rem;
+    border-radius: .5rem;
+    font: 600 .78rem var(--sans);
+    color: #fff;
+    border: 1px solid transparent;
+    transition: filter .2s;
+}
+
+.plataforma:hover {
+    filter: brightness(1.2);
+}
+
+.plataforma svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.plataforma.facebook {
+    background: rgba(24, 119, 242, .18);
+    border-color: rgba(24, 119, 242, .45);
+}
+
+.plataforma.tiktok {
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(255, 255, 255, .2);
+}
+
+.plataforma.youtube {
+    background: rgba(255, 0, 0, .15);
+    border-color: rgba(255, 0, 0, .4);
+}
+
+.sala-acciones {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.sala-acciones .btn {
+    padding: .65rem 1.1rem;
+    font-size: .85rem;
+}
+
+
+/* ==========================================================
+   7. FOOTER
+   ========================================================== */
+.pie {
+    position: relative;
+    overflow: hidden;
+    color: #c3cdd9;
+    /* 1) Mancha vino en la esquina inferior izquierda  2) Degradado azul muy oscuro */
+    background:
+        radial-gradient(ellipse at 0% 100%, rgba(92, 24, 48, .45), transparent 55%),
+        linear-gradient(120deg, #03070f 0%, #07101f 45%, #0b1a30 100%);
+}
+
+/* Franja diagonal más clara a la derecha (decorativa) */
+.pie::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 auto; /* top right bottom left: pegada al borde derecho */
+    width: 18%;
+    background: linear-gradient(180deg, rgba(40, 70, 115, .25), rgba(40, 70, 115, .08));
+    clip-path: polygon(45% 0, 100% 0, 100% 100%, 0 100%); /* Recorta en forma inclinada */
+    pointer-events: none; /* No bloquea los clics en los enlaces */
+}
+
+.pie-contenido {
+    position: relative; /* Queda por encima de la franja decorativa */
+    padding: 3rem var(--lado) 0;
+}
+
+.pie-superior {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+    padding-bottom: 2.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.pie .eyebrow {
+    color: var(--oro);
+    font-size: .66rem;
+}
+
+.pie-titulo {
+    font: 400 clamp(1.5rem, 2.6vw, 2rem)/1.2 var(--serif);
+    color: #fff;
+    margin: .7rem 0 .8rem;
+    max-width: 30rem;
+}
+
+.pie-frase p:last-child {
+    font-size: .85rem;
+    margin: 0;
+}
+
+.pie-invitacion {
+    max-width: 20rem;
+}
+
+.pie-invitacion h2 {
+    font: 700 1rem var(--sans);
+    color: #fff;
+    margin: 0 0 .4rem;
+}
+
+.pie-invitacion p {
+    font-size: .85rem;
+    margin: 0 0 1.1rem;
+}
+
+/* Iconos redondos de redes sociales */
+.redes {
+    display: flex;
+    gap: .55rem;
+    margin-top: 1.3rem;
+}
+
+.redes a {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .2);
+    color: #dfe6ee;
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.redes a:hover {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #1d1606;
+}
+
+.redes svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.pie-inferior {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.8rem 0 1.6rem;
+}
+
+.pie-marca p {
+    margin: 0;
+    font-size: .8rem;
+}
+
+/* !important: gana sobre la regla general ".pie-marca p" de arriba */
+.pie-logo {
+    font: 400 1.35rem var(--serif) !important;
+    color: #fff;
+    margin-bottom: .3rem !important;
+}
+
+/* Punto dorado de "IDP D-2." */
+.pie-logo span {
+    color: var(--oro);
+}
+
+.pie-copy {
+    font-size: .7rem !important;
+    color: #8796a8;
+    margin-top: .2rem !important;
+}
+
+.pie-copy a {
+    color: #c3cdd9;
+}
+
+.pie-enlaces {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    font-size: .82rem;
+    color: #e1e7ee;
+}
+
+.pie a:hover {
+    color: var(--oro);
+}
+
+/* Botón circular "volver arriba" */
+.subir {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .35);
+}
+
+.subir svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+
+/* ==========================================================
+   8. PANEL ADMIN Y FORMULARIOS
+   ========================================================== */
+.wrap {
+    max-width: 1160px;
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 4rem 1.5rem;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.section-head h1,
+.section-head h2 {
+    font-size: 2rem;
+    margin: .4rem 0;
+    color: var(--titulo);
+}
+
+.section-head p {
+    color: var(--texto-suave);
+    margin: 0;
+}
+
+.pill {
+    background: #e0f0fa;
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    color: #176c99;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); /* Columnas automáticas de mínimo 20rem */
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--tarjeta);
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    overflow: hidden; /* El video respeta las esquinas redondeadas */
+}
+
+/* Reproductor de YouTube */
+.player {
+    aspect-ratio: 16 / 9; /* Mantiene la proporción de video panorámico */
+    background: #091c31;
+}
+
+.player iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+.content {
+    padding: 1.5rem;
+}
+
+.content h3 {
+    font-size: 1.35rem;
+    margin: .5rem 0;
+    color: var(--titulo);
+}
+
+.content p,
+.item p {
+    color: var(--texto-suave);
+    margin: .2rem 0;
+}
+
+/* Estado de la transmisión */
+.status {
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: #637891;
+    text-transform: uppercase;
+}
+
+.status.en_vivo {
+    color: #d83347;
+}
+
+.status.programada {
+    color: #ad781c;
+}
+
+.status.finalizada {
+    color: #29845c;
+}
+
+/* ---------- Login (página de acceso) ---------- */
+
+/* Header reducido */
+.nav-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    height: 3.5rem;
+    padding: 0 var(--lado);
+    background: #0d1430;
+    color: #fff;
+}
+
+.nav-simple-marca {
+    font: 600 1rem var(--serif);
+    letter-spacing: .04em;
+}
+
+.nav-simple-marca span {
+    margin-left: .6rem;
+    padding-left: .6rem;
+    border-left: 1px solid rgba(255, 255, 255, .3); /* Rayita divisoria */
+    font: 400 .68rem var(--sans);
+    color: #b9c3d6;
+    vertical-align: middle;
+}
+
+.nav-simple-volver,
+.pie-simple a {
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.nav-simple-volver:hover,
+.pie-simple a:hover {
+    text-decoration: underline;
+}
+
+/* Fondo crema de toda la página */
+.acceso {
+    min-height: calc(100vh - 3.5rem - 3.5rem); /* Pantalla menos header y footer reducidos */
+    display: grid;
+    place-items: center;
+    padding: 3rem 1.25rem 1rem;
+    background: #f3f1ec;
+}
+
+/* Tarjeta de dos columnas */
+.acceso-tarjeta {
+    width: 100%;
+    max-width: 58rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #faf8f4;
+    box-shadow: 0 25px 60px rgba(13, 20, 48, 0.514);
+    overflow: hidden;
+    border-radius: var(--radio);
+}
+
+/* Panel izquierdo: degradado azul → vino y corte diagonal */
+.acceso-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .9rem;
+    padding: 2.5rem 4.5rem 2.5rem 2rem; /* Más espacio a la derecha por el corte diagonal */
+    text-align: center;
+    color: #fff;
+    background:
+        radial-gradient(ellipse at 0% 100%, rgba(170, 20, 40, .85), transparent 55%), /* Rojo abajo a la izquierda */
+        linear-gradient(160deg, #13206b 0%, #0d1430 55%, #2a0d2a 100%);
+    clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%); /* Corta el lado derecho en diagonal */
+}
+
+.acceso-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    font: 700 .62rem var(--sans);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #e8ecf5;
+}
+
+.acceso-eyebrow::before {
+    content: "";
+    width: 1.5rem;
+    height: 1px;
+    background: rgba(255, 255, 255, .6);
+}
+
+.acceso-logo {
+    width: 8.5rem;
+    height: 8.5rem;
+    margin-top: 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .4);
+}
+
+.acceso-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.acceso-logo span {
+    font: 700 1.3rem var(--sans);
+    color: #13206b;
+}
+
+/* Rayita dorada debajo del logo */
+.acceso-iglesia {
+    margin: 0;
+    padding-top: .9rem;
+    position: relative;
+    font-size: .88rem;
+}
+
+.acceso-iglesia::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1.6rem;
+    height: 1px;
+    background: var(--oro);
+    transform: translateX(-50%);
+}
+
+.acceso-lema {
+    margin: 2.2rem 0 0;
+    font: italic 400 1.5rem var(--serif);
+}
+
+.acceso-sub {
+    margin: 0;
+    font-size: .72rem;
+    color: #c9cfe0;
+}
+
+/* Columna del formulario */
+.acceso-formulario {
+    padding: 3rem 2.5rem 2.5rem;
+}
+
+.acceso-formulario h1 {
+    font: italic 400 2.4rem/1.1 var(--serif);
+    color: #0d1430;
+    margin: 0 0 .4rem;
+}
+
+.acceso-intro {
+    font-size: .82rem;
+    color: var(--texto-suave);
+    margin: 0 0 1.4rem;
+}
+
+.acceso-formulario label {
+    font-size: .82rem;
+    color: #1d2333;
+    margin: 1.1rem 0 .4rem;
+}
+
+.acceso-formulario input {
+    margin-top: 0;
+    border-radius: .2rem;
+    border-color: #d5d3cc;
+    font-size: .9rem;
+}
+
+.acceso-formulario input:focus {
+    outline: 2px solid #13206b;
+    outline-offset: -1px;
+}
+
+/* Campo de contraseña con botón "Mostrar" dentro */
+.campo-clave {
+    position: relative;
+}
+
+.campo-clave input {
+    padding-right: 5rem; /* Deja espacio para el botón */
+}
+
+.campo-clave button {
+    position: absolute;
+    top: 50%;
+    right: .5rem;
+    transform: translateY(-50%); /* Centra el botón verticalmente */
+    border: 0;
+    background: none;
+    padding: .3rem .5rem;
+    font: 600 .78rem var(--sans);
+    color: #4a5163;
+    cursor: pointer;
+}
+
+.campo-clave button:hover {
+    color: #0d1430;
+}
+
+.acceso-boton {
+    width: 100%;
+    margin-top: 1.6rem;
+    border-radius: .2rem;
+    background: #0d1430;
+    border-color: #0d1430;
+    font-size: .9rem;
+}
+
+.acceso-error {
+    padding: .7rem .9rem;
+    border-left: 3px solid #a3293d;
+    background: #fbe9eb;
+    color: #8c2234;
+    font-size: .82rem;
+}
+
+.acceso-ayuda {
+    margin: 1.6rem 0 0;
+    text-align: center;
+    font-size: .78rem;
+    color: var(--texto-suave);
+}
+
+/* ---------- Crear cuenta (registro público, registro.js) ---------- */
+/* Mensaje verde al crear la cuenta */
+.acceso-exito {
+    padding: .7rem .9rem;
+    margin-bottom: .4rem;
+    border-left: 3px solid #1e8449;
+    background: #e8f6ee;
+    color: #17663a;
+    font-size: .82rem;
+}
+
+/* Enlace "Crear cuenta" / "Iniciar sesión" para cambiar de formulario */
+.acceso-cambiar {
+    margin: 1.3rem 0 0;
+    text-align: center;
+    font-size: .85rem;
+    color: #1d2333;
+}
+
+/* El enlace se ve como un botón pequeño con borde */
+.acceso-cambiar a {
+    display: inline-block;
+    margin-left: .35rem;
+    padding: .35rem .9rem;
+    border: 1px solid #13206b;
+    border-radius: .2rem;
+    font: 600 .8rem var(--sans);
+    color: #13206b;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+}
+
+.acceso-cambiar a:hover,
+.acceso-cambiar a:focus-visible {
+    background: #13206b;
+    color: #fff;
+}
+
+/* Nota bajo la contraseña */
+.acceso-nota {
+    display: block;
+    margin-top: .35rem;
+    font-size: .75rem;
+    color: var(--texto-suave);
+}
+
+.acceso-formulario[hidden] {
+    display: none;
+}
+
+/* ---------- PRUEBA: foto de fondo en el login ----------
+   Misma foto del hero de inicio y del panel. Si no convence,
+   basta con borrar este bloque completo (hasta "FIN PRUEBA")
+   y el login vuelve al fondo crema. */
+body:has(.pie-simple)::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(rgba(13, 20, 48, .55), rgba(13, 20, 48, .55)), /* Velo azul oscuro */
+        url('../img/hero-inicio.png') center / cover no-repeat;
+    pointer-events: none;
+}
+
+.acceso {
+    background: transparent;
+}
+
+body .pie-simple,   /* "body" le da prioridad sobre la regla .pie-simple de más abajo */
+body .pie-simple a {
+    color: #e8ecf5;   /* Texto claro sobre la foto */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+}
+
+html.alto-contraste body:has(.pie-simple)::before {
+    display: none;
+}
+/* ---------- FIN PRUEBA ---------- */
+
+/* Footer reducido */
+.pie-simple {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 58rem;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 1.5rem;
+    font-size: .75rem;
+    color: #6b6f78;
+}
+
+body:has(.pie-simple) {
+    background: #f3f1ec; /* Mismo crema que el login debajo del footer */
+}
+/* Campos de formulario */
+label {
+    display: block;
+    font-weight: 600;
+    margin: 1rem 0 .45rem;
+}
+
+input,
+textarea,
+select {
+    display: block;
+    width: 100%;
+    margin-top: .4rem;
+    padding: .75rem .8rem;
+    border: 1px solid #cbd9e5;
+    border-radius: .55rem;
+    background: #fff;
+    color: var(--texto);
+    font: inherit; /* Usa la misma letra que el resto de la página */
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid #9fd5f3;
+}
+
+.form-card .btn:first-of-type {
+    margin-top: 1rem;
+}
+
+/* Formulario a la izquierda (24rem) y listado a la derecha */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 24rem 1fr;
+    gap: 1.75rem;
+}
+
+.form-card {
+    padding: 1.6rem;
+    align-self: start; /* No se estira hasta el alto del listado */
+}
+
+.form-card h2,
+.list h2 {
+    margin-top: 0;
+    color: var(--titulo);
+}
+
+.item {
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .9rem;
+}
+
+.item h3 {
+    margin: .3rem 0;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.actions form {
+    margin: 0;
+}
+
+.empty {
+    padding: 2.2rem;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+/* Mensajes de error y éxito */
+.alert {
+    position: relative;
+    z-index: 5; /* Se ve por encima del hero */
+    max-width: 1100px;
+    margin: 1.25rem auto;
+    padding: .75rem 1.1rem;
+    background: #ffebed;
+    color: #a3293d;
+    border-radius: .6rem;
+}
+
+.alert.success {
+    background: #e8f6ee;
+    color: #21663c;
+}
+
+/* En inicio, baja el mensaje para que no quede debajo del header */
+.pagina-inicio main > .alert {
+    margin-top: calc(var(--nav-alto) + 1rem);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.checkbox-label input {
+    width: auto;
+    margin: 0;
+}
+
+/* Mapa del formulario de iglesias */
+.ubicacion-iglesia {
+    margin: 1.1rem 0;
+}
+
+.ubicacion-iglesia p {
+    font-size: .875rem;
+    color: var(--texto-suave);
+}
+
+.mapa-iglesia {
+    width: 100%;
+    height: 20.5rem;
+    border: 1px solid #cbd9e5;
+    border-radius: .6rem;
+    background: #e9eff5;
+}
+
+
+/* ==========================================================
+   8B. PANEL DE ADMINISTRACIÓN (modo oscuro y modo claro)
+   Layout: layouts/admin-header.php y admin-footer.php
+   El botón ☀ agrega/quita la clase .tema-claro en <html> (admin.js).
+   ========================================================== */
+
+/* Colores del panel en MODO OSCURO (por defecto).
+   Redefinen las variables solo dentro de .pagina-admin */
+.pagina-admin {
+    --fondo: #0a1020;
+    --tarjeta: #111a2d;
+    --texto: #e4e9f2;
+    --texto-suave: #8d99ad;
+    --titulo: #ffffff;
+    --borde: rgba(255, 255, 255, .08);
+    --oro: #f5a524;
+    --azul: #3b6fe8;
+
+    --a-fuerte: #ffffff;                      /* Títulos y textos destacados */
+    --a-medio: #c3ccda;                       /* Menú y etiquetas */
+    --a-suave: #a9b4c6;                       /* Textos secundarios */
+    --a-tenue: #66738a;                       /* Textos apagados y placeholders */
+    --a-oscuro: #0c1426;                      /* Barra lateral y campos */
+    --a-barra: rgba(10, 16, 32, .88);         /* Barra superior */
+    --a-sutil: rgba(255, 255, 255, .03);      /* Fondo de botones */
+    --a-hover: rgba(255, 255, 255, .05);      /* Fondo al pasar el mouse */
+    --a-hover-fuerte: rgba(255, 255, 255, .1);
+    --a-borde-input: rgba(255, 255, 255, .12);
+    --a-banner: linear-gradient(135deg, #162139, #0f182b);
+    --a-enlace: #8fb0ff;
+    --a-oro-texto: #f8c160;
+    --a-rojo-texto: #ff8a8a;
+    --a-verde-texto: #6ee59c;
+    --a-gris-texto: #b8c2d2;
+    --a-esquema: dark;                        /* Iconos nativos (calendario) en oscuro */
+
+    --lateral-ancho: 15.5rem;
+    background: var(--fondo);
+    color: var(--texto);
+}
+
+/* Colores del panel en MODO CLARO */
+html.tema-claro .pagina-admin {
+    --fondo: #f3f5f9;
+    --tarjeta: #ffffff;
+    --texto: #1c2433;
+    --texto-suave: #5f6b7e;
+    --titulo: #0b1426;
+    --borde: #e2e7ef;
+    --oro: #d98b00;
+
+    --a-fuerte: #0b1426;
+    --a-medio: #3d4757;
+    --a-suave: #5f6b7e;
+    --a-tenue: #8a95a6;
+    --a-oscuro: #ffffff;
+    --a-barra: rgba(255, 255, 255, .9);
+    --a-sutil: #f6f8fb;
+    --a-hover: #eef2f8;
+    --a-hover-fuerte: #e6ecf5;
+    --a-borde-input: #d3dae4;
+    --a-banner: linear-gradient(135deg, #ffffff, #eaf0ff);
+    --a-enlace: #2f5fd0;
+    --a-oro-texto: #9a5f00;
+    --a-rojo-texto: #c0392b;
+    --a-verde-texto: #1e8449;
+    --a-gris-texto: #5f6b7e;
+    --a-esquema: light;
+}
+
+/* Textos que siempre van en blanco (sobre azul o degradado) */
+html.tema-claro .admin-nav a.activo,
+html.tema-claro .admin-avatar {
+    color: #fff;
+}
+
+/* Sombra suave para separar tarjetas del fondo claro */
+html.tema-claro .admin-stat,
+html.tema-claro .admin-panel,
+html.tema-claro .admin-bienvenida,
+html.tema-claro .admin-encabezado {
+    box-shadow: 0 6px 20px rgba(16, 35, 70, 0.753);
+}
+
+/* Botón ☀/☾: en modo oscuro se ve el sol, en modo claro la luna */
+.icono-luna,
+html.tema-claro .icono-sol {
+    display: none;
+}
+
+html.tema-claro .icono-luna {
+    display: block;
+}
+
+.admin-layout {
+    display: grid;
+    grid-template-columns: var(--lateral-ancho) 1fr; /* Barra lateral fija + contenido */
+    min-height: 100vh;
+}
+
+/* ---------- Barra lateral ---------- */
+.admin-lateral {
+    position: sticky; /* Se queda quieta mientras el contenido hace scroll */
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--a-oscuro);
+    border-right: 1px solid var(--borde);
+    overflow-y: auto;
+}
+
+.admin-marca {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: 1.1rem 1.2rem;
+    border-bottom: 1px solid var(--borde);
+}
+
+.admin-marca img,
+.admin-marca-logo {
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: none;
+    border-radius: .6rem;
+    object-fit: cover;
+}
+
+.admin-marca-logo {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--oro);
+    color: var(--oro);
+    font: 700 .8rem var(--serif);
+}
+
+.admin-marca strong {
+    display: block;
+    font: 700 1rem var(--serif);
+    color: var(--a-fuerte);
+    letter-spacing: .02em;
+}
+
+.admin-marca small {
+    display: block;
+    font: 700 .6rem var(--sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--oro);
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding: 1.2rem .8rem;
+    flex: 1; /* Empuja el pie de la barra hacia abajo */
+}
+
+.admin-nav-titulo {
+    margin: .9rem .6rem .4rem;
+    font: 700 .62rem var(--sans);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--a-tenue);
+}
+
+.admin-nav-titulo:first-child {
+    margin-top: 0;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .65rem .8rem;
+    border-radius: .6rem;
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--a-medio);
+    transition: background .2s, color .2s;
+}
+
+.admin-nav a:hover {
+    background: var(--a-hover);
+    color: var(--a-fuerte);
+}
+
+/* Opción de la página actual: azul con punto dorado */
+.admin-nav a.activo {
+    background: var(--azul);
+    color: var(--a-fuerte);
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(59, 111, 232, .35);
+}
+
+.admin-nav a.activo::after {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    margin-left: auto; /* Lo empuja al extremo derecho */
+    border-radius: 50%;
+    background: var(--oro);
+}
+
+.admin-nav svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: none;
+}
+
+.admin-lateral-pie {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin: .8rem;
+    padding: .8rem;
+    border-radius: .7rem;
+    border: 1px solid var(--borde);
+    background: var(--a-sutil);
+}
+
+.admin-lateral-pie strong {
+    display: block;
+    font-size: .76rem;
+    color: var(--a-fuerte);
+}
+
+.admin-lateral-pie small {
+    display: block;
+    font-size: .68rem;
+    color: var(--texto-suave);
+}
+
+/* Punto verde/dorado de estado */
+.admin-punto {
+    width: .5rem;
+    height: .5rem;
+    flex: none;
+    border-radius: 50%;
+    background: #2ecc71;
+    box-shadow: 0 0 0 .2rem rgba(46, 204, 113, .18);
+}
+
+/* ---------- Barra superior ---------- */
+.admin-principal {
+    min-width: 0; /* Permite que las tablas hagan scroll en vez de desbordar */
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-barra {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 4rem;
+    padding: 0 1.6rem;
+    background: var(--a-barra);
+    -webkit-backdrop-filter: blur(10px); /* Efecto vidrio (Safari) */
+    backdrop-filter: blur(10px);         /* Efecto vidrio */
+    border-bottom: 1px solid var(--borde);
+}
+
+.admin-barra .admin-menu-boton { /* .admin-barra le da más prioridad que la regla de los botones */
+    display: none; /* Solo se ve en celulares */
+}
+
+.admin-migas {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    font-size: .9rem;
+    color: var(--texto-suave);
+}
+
+.admin-migas strong {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    color: var(--oro);
+}
+
+.admin-migas strong::before {
+    content: "";
+    width: .45rem;
+    height: .45rem;
+    border-radius: 50%;
+    background: var(--oro);
+}
+
+.admin-barra-acciones {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-left: auto; /* Empuja las acciones a la derecha */
+}
+
+.admin-barra-acciones form {
+    margin: 0;
+}
+
+.admin-icono-boton,
+.admin-menu-boton {
+    width: 2.4rem;
+    height: 2.4rem;
+    display: grid;
+    place-items: center;
+    border-radius: .6rem;
+    border: 1px solid var(--borde);
+    background: var(--a-sutil);
+    color: var(--a-medio);
+    cursor: pointer;
+}
+
+.admin-icono-boton:hover,
+.admin-menu-boton:hover {
+    background: var(--a-hover-fuerte);
+}
+
+.admin-icono-boton svg,
+.admin-menu-boton svg {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.admin-portal {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .55rem .9rem;
+    border-radius: .6rem;
+    border: 1px solid var(--borde);
+    background: var(--a-sutil);
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.admin-portal:hover {
+    background: var(--a-hover-fuerte);
+}
+
+.admin-portal svg {
+    width: .9rem;
+    height: .9rem;
+}
+
+.admin-usuario {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding-left: .8rem;
+    border-left: 1px solid var(--borde);
+}
+
+/* Círculo con la inicial y punto verde de "conectado" */
+.admin-avatar {
+    position: relative;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: .6rem;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #6a5cff, #3b6fe8);
+    color: var(--a-fuerte);
+    font-weight: 700;
+}
+
+.admin-avatar::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: #2ecc71;
+    border: 2px solid var(--fondo);
+}
+
+.admin-usuario-texto strong {
+    display: block;
+    font-size: .85rem;
+    color: var(--a-fuerte);
+    line-height: 1.2;
+}
+
+.admin-usuario-texto small {
+    display: block;
+    font-size: .7rem;
+    color: var(--oro);
+}
+
+/* ---------- Contenido ---------- */
+.admin-contenido {
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+}
+
+/* Tarjeta grande de bienvenida (Transmisiones) y encabezado (Iglesias, Zonas) */
+.admin-bienvenida,
+.admin-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--borde);
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(59, 111, 232, .18), transparent 55%), /* Brillo azul arriba a la derecha */
+        var(--a-banner);
+}
+
+.admin-encabezado {
+    padding: 1.5rem 2rem;
+}
+
+.admin-bienvenida > div:first-child,
+.admin-encabezado > div:first-child {
+    max-width: 40rem;
+}
+
+.admin-insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .3rem .8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 165, 36, .45);
+    background: rgba(245, 165, 36, .1);
+    font: 700 .66rem var(--sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--oro);
+}
+
+.admin-insignia .admin-punto {
+    background: var(--oro);
+    box-shadow: none;
+}
+
+.admin-bienvenida h1,
+.admin-encabezado h1 {
+    font: 600 clamp(1.6rem, 2.8vw, 2.3rem)/1.15 var(--serif);
+    font-variant: small-caps; /* Versalitas, como en el diseño */
+    color: var(--a-fuerte);
+    margin: .8rem 0 .5rem;
+}
+
+.admin-bienvenida p,
+.admin-encabezado p {
+    margin: 0;
+    color: var(--a-suave);
+}
+
+.admin-bienvenida-acciones {
+    display: flex;
+    gap: .7rem;
+    flex-wrap: wrap;
+}
+
+/* Botones del panel */
+.admin-btn-oro {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #1d1300;
+    border-radius: .6rem;
+}
+
+.admin-btn-azul {
+    background: var(--azul);
+    border-color: var(--azul);
+    border-radius: .6rem;
+}
+
+.admin-btn-linea {
+    background: transparent;
+    border-color: var(--a-borde-input);
+    color: var(--texto);
+    border-radius: .6rem;
+}
+
+.admin-btn-linea:hover {
+    background: var(--a-hover-fuerte);
+    filter: none;
+}
+
+.btn.pequeno {
+    padding: .45rem .8rem;
+    font-size: .8rem;
+}
+
+/* Avisos de éxito / error */
+.admin-aviso {
+    padding: .8rem 1.1rem;
+    border-radius: .7rem;
+    border: 1px solid rgba(245, 165, 36, .4);
+    background: rgba(245, 165, 36, .1);
+    color: var(--a-oro-texto);
+    font-size: .9rem;
+}
+
+.admin-aviso a {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.admin-aviso.exito {
+    border-color: rgba(46, 204, 113, .4);
+    background: rgba(46, 204, 113, .1);
+    color: var(--a-verde-texto);
+}
+
+.admin-aviso.error {
+    border-color: rgba(239, 83, 80, .45);
+    background: rgba(239, 83, 80, .1);
+    color: var(--a-rojo-texto);
+}
+
+/* ---------- Tarjetas de estadísticas ---------- */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.admin-stats-dos {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.admin-stat {
+    padding: 1.2rem 1.3rem;
+    border-radius: 1rem;
+    border: 1px solid var(--borde);
+    background: var(--tarjeta);
+}
+
+.admin-stat-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .8rem;
+    font: 700 .7rem var(--sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--a-suave);
+}
+
+.admin-stat-icono {
+    width: 2.3rem;
+    height: 2.3rem;
+    flex: none;
+    border-radius: .6rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid currentColor;
+}
+
+.admin-stat-icono svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+/* Color del icono según la tarjeta (el fondo usa el mismo color con transparencia) */
+.admin-stat-icono.azul { color: #6b95ff; background: rgba(59, 111, 232, .12); }
+.admin-stat-icono.oro { color: var(--oro); background: rgba(245, 165, 36, .12); }
+.admin-stat-icono.verde { color: #2ecc71; background: rgba(46, 204, 113, .12); }
+.admin-stat-icono.rojo { color: #ff6b6b; background: rgba(255, 107, 107, .12); }
+.admin-stat-icono.morado { color: #b28dff; background: rgba(178, 141, 255, .12); }
+
+.admin-stat > strong {
+    display: block;
+    margin-top: .6rem;
+    font: 600 2.2rem/1 var(--serif);
+    color: var(--a-fuerte);
+}
+
+.admin-stat p {
+    margin: .5rem 0 0;
+    font-size: .8rem;
+    color: var(--texto-suave);
+}
+
+.admin-stat p.admin-stat-texto {
+    margin: .8rem 0 .6rem;
+    font-size: .88rem;
+    color: var(--a-medio);
+}
+
+/* ---------- Columnas: formulario + tabla ---------- */
+.admin-columnas {
+    display: grid;
+    grid-template-columns: 23rem 1fr;
+    gap: 1.4rem;
+    align-items: start;
+}
+
+.admin-panel {
+    border-radius: 1rem;
+    border: 1px solid var(--borde);
+    background: var(--tarjeta);
+}
+
+.admin-panel h2 {
+    font: 600 1.25rem var(--serif);
+    font-variant: small-caps;
+    color: var(--a-fuerte);
+    margin: 0;
+}
+
+.admin-panel-sub {
+    margin: .3rem 0 0;
+    font-size: .82rem;
+    color: var(--texto-suave);
+}
+
+.admin-formulario {
+    padding: 1.4rem;
+    position: sticky; /* El formulario queda visible al bajar por la tabla */
+    top: 5rem;
+}
+
+/* ---------- Ventana de diálogo (formulario de Transmisiones) ----------
+   <dialog> abierto con showModal(): el navegador lo pone encima de todo,
+   bloquea el fondo y lo cierra con Esc. */
+.admin-dialogo {
+    width: min(34rem, calc(100% - 2rem));
+    max-height: calc(100vh - 2rem);
+    padding: 0;           /* Sin relleno: así un clic en el borde cuenta como "fuera" */
+    border: 0;
+    background: transparent;
+    color: var(--texto);
+    overflow: visible;
+}
+
+.admin-dialogo[open] {
+    animation: dialogo-entrar .2s ease-out;
+}
+
+/* Fondo oscuro detrás de la ventana */
+.admin-dialogo::backdrop {
+    background: rgba(3, 7, 16, .7);
+    backdrop-filter: blur(3px);
+}
+
+.admin-dialogo .admin-formulario {
+    position: static;      /* Anula el sticky del formulario normal */
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;      /* Si la pantalla es baja, el formulario se desplaza dentro */
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .5);
+}
+
+/* Título a la izquierda y botón ✕ a la derecha */
+.admin-dialogo-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.admin-dialogo .admin-aviso {
+    margin: 1rem 0 0;
+}
+
+/* Anchos según el formulario */
+.admin-dialogo-ancho {
+    width: min(46rem, calc(100% - 2rem));   /* Transmisiones: 2 columnas */
+}
+
+.admin-dialogo-extra {
+    width: min(68rem, calc(100% - 2rem));   /* Iglesias: datos + mapa */
+}
+
+/* Campos más juntos dentro de la ventana para que no haga falta desplazarse */
+.admin-dialogo label {
+    margin: .8rem 0 .3rem;
+}
+
+.admin-dialogo .admin-ayuda {
+    margin: .3rem 0 0;
+}
+
+/* Formulario en dos columnas (lo mismo que haría Bootstrap con row/col-md-6).
+   Cada campo va en un <div>; con class="completo" ocupa las dos columnas. */
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* minmax(0,…) evita que un texto largo desborde */
+    column-gap: 1rem;
+    align-content: start;
+}
+
+.admin-form-grid .completo {
+    grid-column: 1 / -1;
+}
+
+/* Iglesias: datos a la izquierda y mapa a la derecha */
+.admin-form-dos-lados {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: start;
+}
+
+.admin-dialogo .ubicacion-iglesia {
+    margin: 0;
+}
+
+.admin-dialogo .mapa-iglesia {
+    height: 17rem;
+}
+
+.admin-dialogo .checkbox-label {
+    margin-top: 1rem;
+}
+
+/* Tablet y celular: una sola columna (el formulario se desplaza dentro de la ventana) */
+@media (max-width: 760px) {
+    .admin-form-grid,
+    .admin-form-dos-lados {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-dos-lados {
+        gap: 0;
+    }
+
+    .admin-dialogo .ubicacion-iglesia {
+        margin-top: 1rem;
+    }
+}
+
+@keyframes dialogo-entrar {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-dialogo[open] {
+        animation: none;
+    }
+}
+
+/* Campos del formulario en tema oscuro */
+.pagina-admin label {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--a-medio);
+    margin: 1rem 0 .35rem;
+}
+
+.pagina-admin input,
+.pagina-admin select,
+.pagina-admin textarea {
+    margin-top: 0;
+    background: var(--a-oscuro);
+    border: 1px solid var(--a-borde-input);
+    color: var(--texto);
+    border-radius: .55rem;
+    font-size: .9rem;
+}
+
+.pagina-admin input::placeholder,
+.pagina-admin textarea::placeholder {
+    color: var(--a-tenue);
+}
+
+.pagina-admin input:focus,
+.pagina-admin select:focus,
+.pagina-admin textarea:focus {
+    outline: 2px solid var(--azul);
+    outline-offset: -1px;
+    border-color: transparent;
+}
+
+/* Ícono del calendario visible sobre fondo oscuro */
+.pagina-admin input[type="datetime-local"] {
+    color-scheme: var(--a-esquema);
+}
+
+.pagina-admin .checkbox-label input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--oro); /* Color de la casilla marcada */
+}
+
+.admin-ayuda {
+    margin: .35rem 0 0;
+    font-size: .75rem;
+    color: var(--texto-suave);
+}
+
+/* Dos campos en la misma fila (pastor y teléfono) */
+.admin-form-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+}
+
+.admin-form-acciones {
+    display: flex;
+    gap: .6rem;
+    margin-top: 1.4rem;
+}
+
+.admin-form-acciones .btn:first-child {
+    flex: 1;
+}
+
+.pagina-admin .mapa-iglesia {
+    height: 15rem;
+    border-color: var(--a-borde-input);
+}
+
+/* ---------- Tablas ---------- */
+.admin-tabla-panel {
+    overflow: hidden;
+}
+
+.admin-tabla-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.3rem 1.4rem;
+    border-bottom: 1px solid var(--borde);
+}
+
+.admin-filtros {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+.admin-filtros select,
+.admin-filtros input {
+    width: auto;
+    min-width: 11rem;
+    padding: .5rem .7rem;
+    font-size: .82rem;
+}
+
+.admin-tabla-scroll {
+    overflow-x: auto; /* Scroll horizontal si la tabla no cabe */
+}
+
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+}
+
+.admin-tabla th {
+    padding: .8rem 1.4rem;
+    text-align: left;
+    font: 700 .66rem var(--sans);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    background: var(--a-sutil);
+    white-space: nowrap;
+}
+
+.admin-tabla td {
+    padding: 1rem 1.4rem;
+    border-top: 1px solid var(--borde);
+    vertical-align: middle;
+}
+
+.admin-tabla tbody tr:hover {
+    background: var(--a-hover);
+}
+
+.admin-tabla td strong {
+    display: block;
+    color: var(--a-fuerte);
+    font-weight: 600;
+}
+
+.admin-tabla td strong.admin-normal {
+    font-weight: 500;
+}
+
+.admin-tabla td small {
+    display: block;
+    margin-top: .15rem;
+    font-size: .76rem;
+    color: var(--texto-suave);
+}
+
+/* Etiqueta con borde dorado (iglesia / zona) */
+.admin-chip {
+    display: inline-block;
+    padding: .25rem .6rem;
+    border-radius: .4rem;
+    border: 1px solid rgba(245, 165, 36, .45);
+    background: rgba(245, 165, 36, .08);
+    color: var(--a-oro-texto);
+    font-size: .76rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Estado con color */
+.admin-estado {
+    display: inline-block;
+    padding: .22rem .6rem;
+    border-radius: .35rem;
+    font-size: .74rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-estado.en_vivo { background: rgba(255, 107, 107, .14); color: var(--a-rojo-texto); }
+.admin-estado.programada { background: rgba(245, 165, 36, .14); color: var(--a-oro-texto); }
+.admin-estado.finalizada { background: rgba(141, 153, 173, .16); color: var(--a-gris-texto); }
+.admin-estado.activa { background: rgba(46, 204, 113, .14); color: var(--a-verde-texto); }
+.admin-estado.inactiva { background: rgba(141, 153, 173, .16); color: var(--a-gris-texto); }
+
+.admin-enlace {
+    color: var(--a-enlace);
+    font-weight: 600;
+    font-size: .82rem;
+    white-space: nowrap;
+}
+
+.admin-enlace:hover {
+    text-decoration: underline;
+}
+
+.admin-tenue {
+    color: var(--a-tenue);
+    font-size: .82rem;
+}
+
+.admin-acciones {
+    display: flex;
+    gap: .4rem;
+}
+
+.admin-acciones form {
+    margin: 0;
+}
+
+.admin-accion {
+    padding: .4rem .75rem;
+    border-radius: .45rem;
+    border: 1px solid rgba(245, 165, 36, .5);
+    background: transparent;
+    color: var(--a-oro-texto);
+    font: 600 .78rem var(--sans);
+    cursor: pointer;
+}
+
+.admin-accion:hover {
+    background: rgba(245, 165, 36, .12);
+}
+
+/* Botón rápido "Poner en vivo" (rojo relleno) */
+.admin-accion.vivo {
+    border-color: #e2453c;
+    background: #e2453c;
+    color: #fff;
+}
+
+.admin-accion.vivo:hover {
+    background: #c9362e;
+}
+
+/* Botón rápido "Finalizar" (gris) */
+.admin-accion.finalizar {
+    border-color: var(--a-borde-input);
+    color: var(--a-medio);
+}
+
+.admin-accion.finalizar:hover {
+    background: var(--a-hover-fuerte);
+}
+
+.admin-acciones .admin-accion {
+    white-space: nowrap; /* Evita que el texto del botón se parta en dos líneas */
+}
+
+.admin-accion.peligro {
+    border-color: rgba(255, 107, 107, .45);
+    color: var(--a-rojo-texto);
+}
+
+.admin-accion.peligro:hover {
+    background: rgba(255, 107, 107, .12);
+}
+
+.admin-vacio {
+    margin: 0;
+    padding: 2.5rem 1.4rem;
+    text-align: center;
+    color: var(--texto-suave);
+}
+
+/* Velo oscuro detrás del menú lateral en celulares */
+.admin-velo {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(0, 0, 0, .55);
+}
+
+/* ---------- Panel en pantallas medianas y celulares ---------- */
+/* Formulario arriba y tabla abajo para que se vean todas las columnas */
+@media (max-width: 1400px) {
+    .admin-columnas {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-formulario {
+        position: static;
+    }
+}
+
+/* Estadísticas en 2 columnas */
+@media (max-width: 1100px) {
+    .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* La barra lateral se oculta a la izquierda y entra al tocar ☰ */
+    .admin-lateral {
+        position: fixed;
+        left: 0;
+        z-index: 60;
+        width: var(--lateral-ancho);
+        transform: translateX(-100%);
+        transition: transform .25s;
+    }
+
+    .lateral-abierto .admin-lateral {
+        transform: none;
+    }
+
+    .admin-barra .admin-menu-boton {
+        display: grid;
+    }
+
+    .admin-migas span,
+    .admin-portal,
+    .admin-usuario-texto {
+        display: none;
+    }
+
+    .admin-barra {
+        padding: 0 1rem;
+    }
+
+    .admin-contenido {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .admin-stats,
+    .admin-stats-dos,
+    .admin-form-fila {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-bienvenida,
+    .admin-encabezado {
+        padding: 1.4rem;
+    }
+
+    .admin-filtros select,
+    .admin-filtros input {
+        min-width: 0;
+        flex: 1;
+    }
+
+    /* Barra superior en celular: todos los botones deben caber en el ancho
+       de la pantalla, si no la página se estira y aparece scroll horizontal.
+       El nombre de la sección se oculta porque ya se ve en el título de la página. */
+    .admin-migas {
+        display: none;
+    }
+
+    .admin-barra {
+        gap: .5rem;
+        padding: 0 .75rem;
+    }
+
+    .admin-barra-acciones {
+        gap: .4rem;
+    }
+
+    .admin-icono-boton,
+    .admin-barra .admin-menu-boton,
+    .admin-exportar {
+        width: 2.2rem;
+        height: 2.2rem;
+    }
+
+    .admin-exportar {
+        padding: 0;
+        justify-content: center;
+    }
+
+    .admin-usuario {
+        padding-left: .4rem;
+    }
+}
+
+/* Celulares muy angostos (≤ 360 px): botones aún más juntos */
+@media (max-width: 360px) {
+    .admin-barra-acciones {
+        gap: .25rem;
+    }
+
+    .admin-usuario {
+        padding-left: .25rem;
+        border-left: 0;
+    }
+}
+
+
+/* ==========================================================
+   8C. BOOTSTRAP DENTRO DEL PANEL
+   Bootstrap 5.3.3 se carga solo en el panel (header.php), antes de este archivo.
+   Aquí se le pasan los colores del panel para que sus componentes
+   (grid, card, list-group, badge, form-control, tooltip) combinen con
+   el modo oscuro y el modo claro. También se corrigen choques con .btn.
+   ========================================================== */
+.pagina-admin {
+    --bs-body-bg: var(--fondo);
+    --bs-body-color: var(--texto);
+    --bs-body-font-family: var(--sans);
+    --bs-emphasis-color: var(--a-fuerte);
+    --bs-secondary-color: var(--texto-suave);
+    --bs-tertiary-bg: var(--a-sutil);
+    --bs-border-color: var(--borde);
+    --bs-link-color: var(--a-enlace);
+    --bs-link-hover-color: var(--a-enlace);
+    --bs-heading-color: var(--a-fuerte);
+}
+
+/* Tarjetas de Bootstrap con el mismo aspecto que .admin-stat / .admin-panel */
+.pagina-admin .card {
+    --bs-card-bg: var(--tarjeta);
+    --bs-card-color: var(--texto);
+    --bs-card-border-color: var(--borde);
+    --bs-card-cap-bg: var(--a-sutil);
+    --bs-card-cap-color: var(--a-fuerte);
+    --bs-card-title-color: var(--a-fuerte);
+    --bs-card-subtitle-color: var(--texto-suave);
+    border-radius: 1rem;
+    box-shadow: none;
+}
+
+.pagina-admin .card-header {
+    font: 700 .7rem var(--sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    padding: .9rem 1.2rem;
+}
+
+.pagina-admin .card-title {
+    font: 600 1.2rem var(--serif);
+    font-variant: small-caps;
+}
+
+html.tema-claro .pagina-admin .card {
+    box-shadow: 0 6px 20px rgba(16, 35, 70, .06);
+}
+
+/* Listas (datos del perfil, transmisiones del encargado) */
+.pagina-admin .list-group {
+    --bs-list-group-bg: transparent;
+    --bs-list-group-color: var(--texto);
+    --bs-list-group-border-color: var(--borde);
+    --bs-list-group-item-padding-x: 1.2rem;
+    --bs-list-group-item-padding-y: .85rem;
+}
+
+/* Etiquetas pequeñas de Bootstrap */
+.pagina-admin .badge {
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+/* Bootstrap pone el fondo transparente al pasar el mouse sobre .btn:
+   se repite el color de cada botón del panel para que no "desaparezca". */
+.pagina-admin .btn.admin-btn-oro:is(:hover, :active, :focus-visible, :disabled) {
+    background: var(--oro);
+    border-color: var(--oro);
+    color: #1d1300;
+}
+
+.pagina-admin .btn.admin-btn-azul:is(:hover, :active, :focus-visible, :disabled) {
+    background: var(--azul);
+    border-color: var(--azul);
+    color: #fff;
+}
+
+.pagina-admin .btn.admin-btn-linea:is(:hover, :active, :focus-visible) {
+    background: var(--a-hover-fuerte);
+    border-color: var(--a-borde-input);
+    color: var(--texto);
+}
+
+.pagina-admin .btn.admin-btn-linea:disabled {
+    background: transparent;
+    border-color: var(--a-borde-input);
+    color: var(--texto-suave);
+}
+
+/* Las listas desplegables con .form-select conservan la flecha de Bootstrap
+   (la regla ".pagina-admin select" usa background y la borraría). */
+.pagina-admin select.form-select {
+    background-image: var(--bs-form-select-bg-img);
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    padding-right: 2.25rem;
+}
+
+/* Botón "Exportar PDF" de la barra superior */
+.admin-exportar {
+    white-space: nowrap;
+}
+
+/* ---------- Usuarios: etiqueta de rol ---------- */
+.admin-rol {
+    display: inline-block;
+    padding: .22rem .6rem;
+    border-radius: .35rem;
+    font-size: .74rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-rol.administrador { background: rgba(59, 111, 232, .16); color: var(--a-enlace); }
+.admin-rol.encargado { background: rgba(245, 165, 36, .14); color: var(--a-oro-texto); }
+.admin-rol.usuario { background: rgba(141, 153, 173, .16); color: var(--a-gris-texto); }
+
+/* ---------- Paneles de muestra (encargado) ---------- */
+/* Cinta que avisa que la pantalla es solo de demostración */
+.admin-muestra {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .8rem 1.1rem;
+    border-radius: .8rem;
+    border: 1px dashed rgba(245, 165, 36, .55);
+    background: rgba(245, 165, 36, .07);
+    color: var(--a-oro-texto);
+    font-size: .88rem;
+}
+
+.admin-muestra svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: none;
+}
+
+/* Tarjeta de un módulo que llegará después: atenuada y con candado */
+.admin-modulo-futuro {
+    opacity: .75;
+}
+
+.admin-modulo-futuro .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+
+.admin-modulo-futuro .card-text {
+    color: var(--texto-suave);
+    font-size: .88rem;
+    margin: 0;
+}
+
+.admin-modulo-futuro .btn {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+/* ---------- Mi perfil ---------- */
+.admin-perfil-avatar {
+    display: grid;
+    place-items: center;
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--azul), #7a4fe0);
+    color: #fff;
+    font: 600 2.2rem var(--serif);
+    flex: none;
+}
+
+.admin-dato {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-dato span {
+    color: var(--texto-suave);
+    font-size: .85rem;
+}
+
+.admin-dato strong {
+    color: var(--a-fuerte);
+    font-weight: 600;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+/* En celular el botón Exportar muestra solo el icono */
+@media (max-width: 900px) {
+    .admin-exportar span {
+        display: none;
+    }
+}
+
+
+/* ==========================================================
+   8D. IMAGEN DE FONDO DEL PANEL
+   La misma foto del hero de inicio, fija detrás de todo el panel.
+   Un velo de color encima la oscurece (o aclara en modo claro) para
+   que el texto se lea bien. Las tarjetas, la barra lateral y la
+   superior pasan a ser semitransparentes con efecto vidrio.
+   ========================================================== */
+.pagina-admin {
+    --a-velo: rgba(10, 16, 32, 0.562);          /* Velo sobre la foto (modo oscuro) */
+    --tarjeta: rgba(17, 26, 45, 0.253);         /* Tarjetas semitransparentes */
+    --a-lateral: rgba(12, 20, 38, 0.603);       /* Barra lateral semitransparente */
+    --a-banner: linear-gradient(135deg, rgba(22, 33, 57, .35), rgba(15, 24, 43, .35)); /* Sección de bienvenida */
+}
+
+html.tema-claro .pagina-admin {
+    --a-velo: rgba(243, 245, 249, 0.384);
+    --tarjeta: rgba(255, 255, 255, 0.384);
+    --a-lateral: rgba(255, 255, 255, 0.658);
+    --a-banner: linear-gradient(135deg, rgba(255, 255, 255, .45), rgba(234, 240, 255, .45));
+}
+
+/* La foto va en una capa fija (::before) en vez de "background-attachment: fixed",
+   porque esa opción no funciona en celulares (iOS). */
+body.pagina-admin::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(var(--a-velo), var(--a-velo)),
+        url('../img/hero-inicio.png') center / cover no-repeat;
+    pointer-events: none;
+}
+
+/* Efecto vidrio: desenfoca la foto que se ve a través de las tarjetas */
+.pagina-admin .admin-lateral,
+.pagina-admin .admin-encabezado,
+.pagina-admin .admin-stat,
+.pagina-admin .admin-panel,
+.pagina-admin .card {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.pagina-admin .admin-lateral {
+    background: var(--a-lateral);
+}
+
+/* ---------- Color de los párrafos del panel ----------
+   Textos descriptivos: subtítulos, descripciones de las tarjetas,
+   correos de las tablas y ayudas. Celeste en oscuro, azul oscuro en claro. */
+.pagina-admin {
+    --a-parrafo: #8fd3ff;                     /* Celeste (modo oscuro) */
+}
+
+html.tema-claro .pagina-admin {
+    --a-parrafo: #1a3a6b;                     /* Azul oscuro (modo claro) */
+}
+
+html.alto-contraste .pagina-admin {
+    --a-parrafo: #fff;                        /* Alto contraste: blanco */
+}
+
+.pagina-admin .admin-bienvenida p,
+.pagina-admin .admin-encabezado p,
+.pagina-admin .admin-stat p,
+.pagina-admin .admin-stat p.admin-stat-texto,
+.pagina-admin .admin-panel-sub,
+.pagina-admin .admin-ayuda,
+.pagina-admin .admin-vacio,
+.pagina-admin .admin-tabla td small {
+    color: var(--a-parrafo);
+}
+
+/* Alto contraste: sin foto, fondo liso para máxima legibilidad */
+html.alto-contraste body.pagina-admin::before {
+    display: none;
+}
+
+html.alto-contraste .pagina-admin .admin-lateral {
+    background: #000;
+}
+
+
+/* ==========================================================
+   9. ACCESIBILIDAD
+   Las clases las agrega sitio.js en <html> desde el menú Accesibilidad.
+   ========================================================== */
+
+/* Letra grande: todo está en rem, así que al subir el tamaño base crece todo (16px → 19px) */
+html.letra-grande {
+    font-size: 118.75%;
+}
+
+/* Alto contraste: cambia las variables a negro, blanco y amarillo */
+html.alto-contraste {
+    --fondo: #000;
+    --fondo-alt: #000;
+    --tarjeta: #000;
+    --texto: #fff;
+    --texto-suave: #fff;
+    --titulo: #fff;
+    --borde: #fff;
+    --oro: #ffe14d;
+    --oro-oscuro: #ffe14d;
+    --primario: #ffe14d;
+    --marino-2: #fff;
+    --nav-fondo: #000;
+    --nav-solida: #000;
+    --capsula-borde: #fff;
+    --capsula-fondo: #000;
+    --sombra: none;
+}
+
+/* Quita las fotos de fondo para que el texto se lea mejor */
+html.alto-contraste .hero-inicio,
+html.alto-contraste .parallax-marcha,
+html.alto-contraste .sala,
+html.alto-contraste .sala-escenario,
+html.alto-contraste .pie {
+    background: #000;
+}
+
+html.alto-contraste .enc-hero {
+    background: #000;
+}
+
+/* Login */
+html.alto-contraste .acceso,
+html.alto-contraste .acceso-tarjeta,
+html.alto-contraste .acceso-panel,
+html.alto-contraste .nav-simple,
+html.alto-contraste body:has(.pie-simple) {
+    background: #000;
+}
+
+html.alto-contraste .acceso-tarjeta {
+    border: 1px solid #fff;
+}
+
+html.alto-contraste .acceso-formulario h1,
+html.alto-contraste .acceso-formulario label,
+html.alto-contraste .campo-clave button,
+html.alto-contraste .pie-simple {
+    color: #fff;
+}
+
+/* Oculta las fotos del carrusel y quita el efecto vidrio */
+html.alto-contraste .enc-carrusel {
+    display: none;
+}
+
+html.alto-contraste .vidrio,
+html.alto-contraste .enc-pastor,
+html.alto-contraste .enc-direccion {
+    background: #000;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+html.alto-contraste .pie::before {
+    display: none;
+}
+
+html.alto-contraste .hero-texto,
+html.alto-contraste .pie,
+html.alto-contraste .pie-copy,
+html.alto-contraste .sala-aviso,
+html.alto-contraste .sala-plataformas {
+    color: #fff;
+}
+
+/* Subraya los enlaces de texto para distinguirlos */
+html.alto-contraste main a:not(.btn):not(.capsula),
+html.alto-contraste .pie-enlaces a:not(.subir) {
+    text-decoration: underline;
+}
+
+html.alto-contraste .btn {
+    background: #ffe14d;
+    border-color: #ffe14d;
+    color: #000;
+}
+
+html.alto-contraste .btn.outline,
+html.alto-contraste .btn-claro,
+html.alto-contraste .btn-capsula-clara,
+html.alto-contraste .btn-borde-oro {
+    background: #000;
+    color: #fff;
+    border-color: #fff;
+}
+
+html.alto-contraste .capsula.activa {
+    background: #ffe14d;
+    color: #000;
+}
+
+html.alto-contraste .desplegable-menu {
+    background: #000;
+    border-color: #fff;
+}
+
+html.alto-contraste input,
+html.alto-contraste textarea,
+html.alto-contraste select {
+    background: #000;
+    color: #fff;
+    border-color: #fff;
+}
+
+html.alto-contraste .alert,
+html.alto-contraste .pill {
+    background: #000;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+html.alto-contraste .status {
+    color: #ffe14d;
+}
+
+html.alto-contraste .mensaje-logo {
+    background: #fff;
+}
+
+/* Panel de administración en alto contraste (gana sobre modo claro y oscuro) */
+html.alto-contraste .pagina-admin {
+    --fondo: #000;
+    --tarjeta: #000;
+    --texto: #fff;
+    --texto-suave: #fff;
+    --titulo: #fff;
+    --borde: #fff;
+    --oro: #ffe14d;
+    --a-fuerte: #fff;
+    --a-medio: #fff;
+    --a-suave: #fff;
+    --a-tenue: #fff;
+    --a-oscuro: #000;
+    --a-barra: #000;
+    --a-sutil: #000;
+    --a-hover: #222;
+    --a-hover-fuerte: #333;
+    --a-borde-input: #fff;
+    --a-banner: #000;
+    --a-enlace: #ffe14d;
+    --a-oro-texto: #ffe14d;
+    --a-rojo-texto: #fff;
+    --a-verde-texto: #fff;
+    --a-gris-texto: #fff;
+    --a-esquema: dark;
+}
+
+html.alto-contraste .admin-nav a.activo {
+    background: #ffe14d;
+    color: #000;
+    box-shadow: none;
+}
+
+html.alto-contraste .admin-estado,
+html.alto-contraste .admin-chip,
+html.alto-contraste .admin-aviso {
+    background: #000;
+    border: 1px solid #fff;
+}
+
+html.alto-contraste .ola {
+    display: none;
+}
+
+/* Si el usuario pidió "reducir movimiento" en su sistema, se quitan animaciones */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Parallax: en celulares (sin mouse) el fondo fijo no funciona bien, así que se desactiva */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .hero-inicio,
+    .parallax-marcha {
+        background-attachment: scroll;
+    }
+}
+
+
+/* ==========================================================
+   10. RESPONSIVE
+   ========================================================== */
+
+/* Pantallas medianas: se oculta el subtítulo del logo para que quepa el menú */
+@media (max-width: 1240px) {
+    .brand-sub {
+        display: none;
+    }
+}
+
+/* Tablets y celulares: menú hamburguesa */
+@media (max-width: 1100px) {
+    .nav-toggle {
+        display: flex;
+    }
+
+    /* El menú se convierte en un panel debajo del header */
+    .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .5rem;
+        padding: 1rem 1.25rem 1.4rem;
+        background: var(--nav-solida);
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+        max-height: calc(100vh - var(--nav-alto)); /* Si es muy largo, permite scroll dentro del menú */
+        overflow-y: auto;
+    }
+
+    /* body.menu-abierto lo pone sitio.js al tocar ☰ */
+    .menu-abierto .menu {
+        display: flex;
+    }
+
+    .menu-abierto .nav {
+        background: var(--nav-solida);
+    }
+
+    .capsula {
+        justify-content: center;
+        padding: .8rem 1rem;
+        font-size: .95rem;
+    }
+
+    .desplegable-menu {
+        position: static; /* Dentro del panel, el desplegable se abre hacia abajo sin flotar */
+        margin-top: .5rem;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 860px) {
+    .vivo-ahora {
+        grid-template-columns: 1fr;
+    }
+
+    /* Encuéntranos: tarjetas de vidrio y mapa en una sola columna */
+    .enc-tarjetas,
+    .enc-llegar-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .enc-mapa {
+        min-height: 20rem;
+    }
+
+    .pie-superior {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .pie::before {
+        display: none;
+    }
+}
+
+/* Celulares */
+@media (max-width: 750px) {
+    .seccion {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+
+    .hero-inicio {
+        padding-top: calc(var(--nav-alto) + 2rem);
+    }
+
+    .hero-acciones .btn {
+        flex: 1 1 100%; /* Botones a todo el ancho */
+    }
+
+    .parallax-marcha {
+        min-height: 28rem;
+    }
+
+    .mensaje {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Centra la rayita dorada */
+    .mensaje-autor::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .pie-inferior {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .item {
+        flex-direction: column;
+    }
+
+    /* Login: el panel oscuro arriba y el formulario abajo */
+    .acceso-tarjeta {
+        grid-template-columns: 1fr;
+    }
+
+    .acceso-panel {
+        padding: 2rem 1.5rem 3rem;
+        clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); /* Corte diagonal abajo */
+    }
+
+    .acceso-logo {
+        width: 6.5rem;
+        height: 6.5rem;
+        margin-top: .5rem;
+    }
+
+    .acceso-lema {
+        margin-top: 1rem;
+    }
+
+    .acceso-formulario {
+        padding: 2rem 1.5rem;
+    }
+
+    .nav-simple-marca span {
+        display: none;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .wrap {
+        padding: 2.5rem 1rem;
+    }
+}
+
+/* Errores de validacion compartidos por el login y el panel. */
+form [data-error-campo] { display: block; color: #dc3545; font-size: .875rem; margin-top: .35rem; }
+.acceso-formulario .is-invalid { border-color: #dc3545; }
